@@ -1,7 +1,7 @@
 # Copyright 2018 Thinkwell Designs <dave@thinkwelldesigns.com>
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
-from odoo import _, models
+from odoo import _, api, models
 
 
 class AccountPaymentOrder(models.Model):
@@ -51,8 +51,19 @@ class AccountPaymentOrder(models.Model):
                         "Automatically switched from <b>First</b> to "
                         "<b>Recurring</b> when the debit order "
                         "<a href=# data-oe-model=account.payment.order "
-                        "data-oe-id=%d>%s</a> has been marked as uploaded."
-                    )
-                    % (order.id, order.name)
+                        "data-oe-id={}>{}</a> has been marked as uploaded."
+                    ).format(order.id, order.name)
+                    #                    % (order.id, order.name)
                 )
+        return res
+
+
+class AccountPaymentMethod(models.Model):
+    _inherit = "account.payment.method"
+
+    @api.model
+    def _get_payment_method_information(self):
+        res = super()._get_payment_method_information()
+        res["ACH-in"] = {"mode": "multi", "domain": [("type", "in", ("bank", "cash"))]}
+        # res['ACH-In'] = {'mode': 'multi'}
         return res

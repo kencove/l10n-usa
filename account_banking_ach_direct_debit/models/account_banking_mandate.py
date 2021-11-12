@@ -37,7 +37,7 @@ class AccountBankingMandate(models.Model):
     )
     scheme = fields.Selection(
         [("CORE", "Basic (CORE)"), ("B2B", "Enterprise (B2B)")],
-        string="Scheme",
+        string="Select scheme",
         default="CORE",
         tracking=True,
     )
@@ -106,10 +106,8 @@ class AccountBankingMandate(models.Model):
         if expired_mandates:
             expired_mandates.write({"state": "expired"})
             logger.info(
-                _(
-                    "The following ACH Mandate IDs have been set to "
-                    "expired: %s" % expired_mandates.ids
-                )
+                _("The following ACH Mandate IDs have been set to expired: %s")
+                % expired_mandates.ids
             )
         else:
             logger.info(_("0 ACH Mandates had to be set to Expired"))
